@@ -1,8 +1,8 @@
 title: "My GitHub Blog"
-author: "Your Name"
+author: "Paweł Habrzyk"
 description: "A simple blog built with Jekyll and GitHub Pages"
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://username.github.io"
+url: "https://priestofadanos.github.io"
 
 theme: minima
 
