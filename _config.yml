@@ -1,0 +1,10 @@
+title: "My GitHub Blog"
+author: "Your Name"
+description: "A simple blog built with Jekyll and GitHub Pages"
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://username.github.io"
+
+theme: minima
+
+# Build settings
+enforce_https: true
