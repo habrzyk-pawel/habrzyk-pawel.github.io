@@ -24,6 +24,7 @@ As we have discussed, data is what decides program behaviour. As we (hopefully) 
 
 ## Scaling computations
 
+
 ## Artifact versioning
 The result of training is a binary file, just as an .exe file is. The difference between them is their stability - handwritten changes to a program are more prodictable and trustoworthy than outputs of a brainless algorithm. We need to much more deeply analize and track the changes in the results we achive over time. 
 
