@@ -4,7 +4,7 @@ title:  "What is MLOps"
 date:   2025-05-07 09:00:00 +02:00
 ---
 
-The newest member of <shiny new thing>Ops family of names is MLOps. Like with every other position name in software engineering, the name does not correspond to **actual** actions performed by theese specialists, but to the **purpose** of those actions. This article is an attempt at claryfying *why* companies need to MLOps.
+The newest member of Ops family of names is MLOps. Like with every other position name in software engineering, it does not correspond to **actual** actions performed by theese specialists, but to the **purpose** of those actions. This article is an attempt at claryfying *why* companies need to MLOps.
 
 ## Prediction quality > other KPI's
 
@@ -17,6 +17,19 @@ In conventional software, the reaction of a program to external information is d
 ## MLOps is DevOps coulture in Ai and Big Data
 
 Long ago, software had a release cycle of hardware products. Requirements collection, architecture design, coding, testing, defect correction and release. From an outside perspective, release looked like throwing a ready made solutions through a fence, and hoping there is someone else on the other side to catch it and care for it. That someone else were admins, who were responsible for somehow makeing the program they've never seen work. DevOps is shifting that reponsibility onto people that wrote the damn app. Developers did what developers do and automated the hell out of the processes necessary to keep the app running. The Ai world is in a similar place - data scientists build some binary file and send it over to developers, who are responsible for ensuring the model is running correctly, despite not knowing what that actually means. The responsibility to ensure the (and ability to react to unsatisfactory) model performance should be as much in the hands of a data scientist as possible. MLOps is really automations that enable the data scientists to do just that. It comes with several challanges, four of which we will discuss further
+
+## Data storage
+
+As we have discussed, data is what decides program behaviour. As we (hopefully) know, we should keep track of changes that influence program behaviour. Unfortunetelly, versioning data is more complex than versioning code. There are 2 reasons for that. First is that code takes much less space. A git repo is not going to exceed 5gb of code, while corporations count the training data in petabytes. The second is data governance - code leak means a rewrite. Data leak means a lawsuit. 
+
+## Scaling computations
+
+## Artifact versioning
+The result of training is a binary file, just as an .exe file is. The difference between them is their stability - handwritten changes to a program are more prodictable and trustoworthy than outputs of a brainless algorithm. We need to much more deeply analize and track the changes in the results we achive over time. 
+
+## Monitoring
+
+The lack of trust to the resulting artifact extends to constantly monitoring queries it receives and results it returns to compare them to queries and results we've seen during training phase. The algorithm should only return answears to questions that fit into a range of a training set. If we trained our algorithm on spanish, we should'nt allow queries in russian. If we never return a prediction of sugar level in blood above 200, we should porobably flag a result of 2000. If we see a lot of queries that do not correspond to a training set or anomalies in responses, it might be a sign to retrain our model.
 
 
 
