@@ -24,6 +24,7 @@ As we have discussed, data is what decides program behaviour. As we (hopefully) 
 
 ## Scaling computations
 
+Scaling compute has always been hard. We wouldn't have work without it. It comes without saying that scaling compute comes with technical and legal challanges. Scaling to cloud is a legal nightmare for large corporations, scaling internal infra brings challenges in its own right. 
 
 ## Artifact versioning
 The result of training is a binary file, just as an .exe file is. The difference between them is their stability - handwritten changes to a program are more prodictable and trustoworthy than outputs of a brainless algorithm. We need to much more deeply analize and track the changes in the results we achive over time. 
