@@ -35,6 +35,6 @@ The lack of trust to the resulting artifact extends to constantly monitoring que
 
 ## Summary
 
-The point of this article is to demostrate what is MLOps and why it is hard. In a sense it is hard for the same reasons why software is hard - just in its own unique way 
+The point of this article is to demostrate what is MLOps and why it is hard. In a sense it is hard for the same reasons why software is hard - just in its own unique way. As always, why comes before what and how
 
 
