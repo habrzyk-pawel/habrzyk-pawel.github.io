@@ -33,5 +33,8 @@ The result of training is a binary file, just as an .exe file is. The difference
 
 The lack of trust to the resulting artifact extends to constantly monitoring queries it receives and results it returns to compare them to queries and results we've seen during training phase. The algorithm should only return answears to questions that fit into a range of a training set. If we trained our algorithm on spanish, we should'nt allow queries in russian. If we never return a prediction of sugar level in blood above 200, we should porobably flag a result of 2000. If we see a lot of queries that do not correspond to a training set or anomalies in responses, it might be a sign to retrain our model.
 
+## Summary
+
+The point of this article is to demostrate what is MLOps and why it is hard. In a sense it is hard for the same reasons why software is hard - just in its own unique way 
 
 
