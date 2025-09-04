@@ -83,8 +83,8 @@ OOM thrown
 
 ##### streaming=True
 
-OOM thrown
-<img width="1436" height="1141" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
+<img width="1426" height="1119" alt="image" src="https://github.com/user-attachments/assets/e527f341-0025-453b-b74f-bf00798cdd78" />
+
 
 ### Script 3
 ```python
