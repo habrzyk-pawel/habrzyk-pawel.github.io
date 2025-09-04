@@ -84,8 +84,8 @@ write_csv_approx_Ngb("taxi_15gb.csv", target_gb=8, batch_size=20000)
 ```
 
 
-## Polars
-We will run 3 agggreagations, each with `_eagar=True`, `_eagar=False`, `streaming=True`
+## Tests
+We will run 3 agggreagations, each with `_eagar=True`, `_eagar=False`, `streaming=True` and in DuckDB
 (streaming is a special case of `_eagar=False`)
 
 ### Script 1
@@ -124,6 +124,27 @@ df = q_taxi.collect(_eager=True)
 <img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/b00eacda-3d68-4baf-8257-c7979514fd6d" />
 
 ##### DuckDB
+```python
+import duckdb
+
+con = duckdb.connect()
+
+q = """
+SELECT
+  payment_type,
+  COUNT(*) AS trips,
+  AVG(total_amount) AS mean_fare,
+  AVG(trip_distance) AS mean_dist
+FROM 'taxi.csv'
+WHERE passenger_count >= 1
+  AND trip_distance > 0.5
+GROUP BY payment_type
+"""
+
+print("streaming")
+df = con.execute(q).df()
+
+```
 
 <img width="1437" height="1127" alt="image" src="https://github.com/user-attachments/assets/112fa1ba-60be-41c5-98bd-479e1f2c7da7" />
 
@@ -160,6 +181,24 @@ df = q_taxi.collect(_eager=True)
 
 ##### DuckDB
 
+```python
+import duckdb
+
+con = duckdb.connect()
+
+q = """
+SELECT
+  payment_type,
+  CAST(total_amount * 100 AS BIGINT) AS amt_cents,
+  COUNT(*) AS len
+FROM 'taxi.csv'
+GROUP BY payment_type, amt_cents
+"""
+
+print("streaming")
+df = con.execute(q).df()
+```
+
 <img width="1444" height="1121" alt="image" src="https://github.com/user-attachments/assets/17486eb2-2390-4145-a721-774a438bb4e3" />
 
 
@@ -194,6 +233,21 @@ df = q_taxi.collect(_eager=True)
 
 #### DuckDB
 NO OOM !!!
+
+```python
+import duckdb
+
+con = duckdb.connect()
+
+q = """
+SELECT *
+FROM 'taxi.csv'
+ORDER BY total_amount
+"""
+
+df = con.execute(q).df()
+```
+
 <img width="1444" height="1127" alt="image" src="https://github.com/user-attachments/assets/92046dcd-63ab-4b81-b2db-426e86fa108c" />
 
 
