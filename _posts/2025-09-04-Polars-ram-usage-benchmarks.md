@@ -10,14 +10,15 @@ What we will do is we will try to gauge the differences between eagar, lazy and 
 I curently face multiple issues related to OOM, anything that mentions out of core computation is of interest to me.
 
 ## Out of core
-This is a mode of computation in which a computation engine offloads whatever it has cached for future joins to a dediated file. If we are not usign something now but instead have it saved up for the future, we should store it on disk.
-This way, we delay the moment where we absolutelly need a cluster to make certain aggregations. If You are facing a OOM, a good first step is to parse throught docs of the tool You are using for out of core entry (most frameworks disable it for speed).
+This mode of computation allows the engine to offload cached data for future joins onto a dedicated file. Instead of keeping everything in memory, data that is not immediately needed is stored on disk for later use. This approach helps defer the point at which a cluster becomes necessary for performing certain aggregations.
 
-With that out of the way, lets try to figure out the impact it might have on consumption
+If you encounter an out-of-memory (OOM) issue, a good initial step is to review the documentation of the tool you are using to enable out-of-core execution (noting that many frameworks disable this feature by default in favor of speed).
+
+With that context established, we can now examine the potential impact this approach may have on resource consumption.
 
 ## Dataset 
 
-We will use faker to generate a simulation of taxi dataset.
+We will use faker to generate a simulated taxi dataset.
 
 ```python
 from faker import Faker
