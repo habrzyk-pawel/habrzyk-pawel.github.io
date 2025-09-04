@@ -111,4 +111,9 @@ OOM thrown
 <img width="1436" height="1141" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
 
 
+## Conclusion 
+The difference can be stark - script 1&2 demonstrate that certain aggregations can be practically done without ram usage. On the other hand, script 3 shows that this is not a silver bullet.
+Next, we will evaluate DuckDB on the same aggreagations and XGBoost out-of-core features to see how far we can push it on limited hardware
+
+
 
