@@ -8,6 +8,7 @@ This entry is meant as an mini extension of [this beautiful blog post](https://m
 
 What we will do is we will try to gauge the differences between eagar, lazy and streaming in terms of ram usage.
 I curently face multiple issues related to OOM, anything that mentions out of core computation is of interest to me.
+We will pit polars against DuckDB for comparison.
 
 ## Out of core
 This mode of computation allows the engine to offload cached data for future joins onto a dedicated file. Instead of keeping everything in memory, data that is not immediately needed is stored on disk for later use. This approach helps defer the point at which a cluster becomes necessary for performing certain aggregations.
@@ -122,6 +123,10 @@ df = q_taxi.collect(_eager=True)
 ##### streaming=True
 <img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/b00eacda-3d68-4baf-8257-c7979514fd6d" />
 
+##### DuckDB
+
+<img width="1437" height="1127" alt="image" src="https://github.com/user-attachments/assets/112fa1ba-60be-41c5-98bd-479e1f2c7da7" />
+
 
 ### Script 2 
 (script 1 with exploded group count)
@@ -153,6 +158,10 @@ df = q_taxi.collect(_eager=True)
 
 <img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/e527f341-0025-453b-b74f-bf00798cdd78" />
 
+##### DuckDB
+
+<img width="1444" height="1121" alt="image" src="https://github.com/user-attachments/assets/17486eb2-2390-4145-a721-774a438bb4e3" />
+
 
 ### Script 3
 ```python
@@ -183,10 +192,15 @@ df = q_taxi.collect(_eager=True)
 
 <img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
 
+#### DuckDB
+NO OOM !!!
+<img width="1444" height="1127" alt="image" src="https://github.com/user-attachments/assets/92046dcd-63ab-4b81-b2db-426e86fa108c" />
+
 
 ## Conclusion 
-The difference can be stark - script 1&2 demonstrate that certain aggregations can be practically done without ram usage. On the other hand, script 3 shows that this is not a silver bullet.
-Next, we will evaluate DuckDB on the same aggreagations and XGBoost out-of-core features to see how far we can push it on limited hardware
+The difference can be stark - script 1&2 demonstrate that certain aggregations can be practically done without ram usage. On the other hand, script 3 shows that this is not a silver bullet. Interestingly, DuckDB survived workload 3, and I don't know what to do with it yet.
+
+Next, we will evaluate XGBoost out-of-core features to see how far we can push it on limited hardware
 
 
 
