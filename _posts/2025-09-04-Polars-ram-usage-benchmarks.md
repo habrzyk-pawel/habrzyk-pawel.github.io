@@ -115,8 +115,6 @@ df = q_taxi.collect(_eager=True)
 
 <img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3a3803f9-966e-456f-aa00-268fda214142" />
 
-(seconds later container crushed due to OOM)
-
 ##### _eager=False
 <img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/46a52520-9206-47f3-bff3-5cd590ab6e11" />
 
