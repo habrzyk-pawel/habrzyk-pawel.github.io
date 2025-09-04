@@ -199,7 +199,7 @@ print("streaming")
 df = con.execute(q).df()
 ```
 
-<img width="1444" height="1121" alt="image" src="https://github.com/user-attachments/assets/17486eb2-2390-4145-a721-774a438bb4e3" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/17486eb2-2390-4145-a721-774a438bb4e3" />
 
 
 ### Script 3
@@ -248,7 +248,7 @@ ORDER BY total_amount
 df = con.execute(q).df()
 ```
 
-<img width="1444" height="1127" alt="image" src="https://github.com/user-attachments/assets/92046dcd-63ab-4b81-b2db-426e86fa108c" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/92046dcd-63ab-4b81-b2db-426e86fa108c" />
 
 
 ## Conclusion 
