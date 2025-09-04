@@ -54,7 +54,8 @@ df = q_taxi.collect(_eager=True)
 <img width="1429" height="1117" alt="image" src="https://github.com/user-attachments/assets/b00eacda-3d68-4baf-8257-c7979514fd6d" />
 
 
-### Script 2
+### Script 2 
+(script 1 with exploded group count)
 ```python
 import polars as pl
 
