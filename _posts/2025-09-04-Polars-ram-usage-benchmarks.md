@@ -46,15 +46,15 @@ df = q_taxi.collect(_eager=True)
 (OOM was thrown)
 
 
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3a3803f9-966e-456f-aa00-268fda214142" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3a3803f9-966e-456f-aa00-268fda214142" />
 
 (seconds later container crushed due to OOM)
 
 ##### _eager=False
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/46a52520-9206-47f3-bff3-5cd590ab6e11" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/46a52520-9206-47f3-bff3-5cd590ab6e11" />
 
 ##### streaming=True
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/b00eacda-3d68-4baf-8257-c7979514fd6d" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/b00eacda-3d68-4baf-8257-c7979514fd6d" />
 
 
 ### Script 2 
@@ -77,15 +77,15 @@ df = q_taxi.collect(_eager=True)
 ##### _eager=True
 (OOM was thrown)
 
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/7b0b6c89-28a1-4ce5-b213-b3fda15a7b0e" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/7b0b6c89-28a1-4ce5-b213-b3fda15a7b0e" />
 
 ##### _eager=False
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/522ff92f-8b31-470f-bae9-26ff79cdd78e" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/522ff92f-8b31-470f-bae9-26ff79cdd78e" />
 
 
 ##### streaming=True
 
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/e527f341-0025-453b-b74f-bf00798cdd78" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/e527f341-0025-453b-b74f-bf00798cdd78" />
 
 
 ### Script 3
@@ -102,20 +102,20 @@ df = q_taxi.collect(_eager=True)
 ##### _eager=True
 (OOM was thrown)
 
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
 
 ##### _eager=False
 
 (OOM was thrown)
 
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
 
 
 ##### streaming=True
 
 (OOM was thrown)
 
-<img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
 
 
 ## Conclusion 
