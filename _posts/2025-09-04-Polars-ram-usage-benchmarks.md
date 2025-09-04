@@ -42,12 +42,12 @@ df = q_taxi.collect(_eager=True)
 ```
 #### Results
 * note that in the future _eagar=True -> optimizations=True and streming=True -> engine="streaming"
-##### _eagar=True
+##### _eager=True
 <img width="1438" height="1128" alt="image" src="https://github.com/user-attachments/assets/3a3803f9-966e-456f-aa00-268fda214142" />
 
 (seconds later container crushed due to OOM)
 
-##### _eagar=False
+##### _eager=False
 <img width="1426" height="1121" alt="image" src="https://github.com/user-attachments/assets/46a52520-9206-47f3-bff3-5cd590ab6e11" />
 
 ##### streaming=True
@@ -71,14 +71,12 @@ df = q_taxi.collect(_eager=False)
 df = q_taxi.collect(_eager=True)
 ```
 #### Results
-##### _eagar=True
+##### _eager=True
 OOM thrown
-<img width="1429" height="1129" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
+<img width="1439" height="1112" alt="image" src="https://github.com/user-attachments/assets/7b0b6c89-28a1-4ce5-b213-b3fda15a7b0e" />
 
-##### _eagar=False
-
-OOM thrown
-<img width="1433" height="1112" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
+##### _eager=False
+<img width="1417" height="1114" alt="image" src="https://github.com/user-attachments/assets/522ff92f-8b31-470f-bae9-26ff79cdd78e" />
 
 
 ##### streaming=True
@@ -97,11 +95,11 @@ df = q_taxi.collect(_eager=False)
 df = q_taxi.collect(_eager=True)
 ```
 #### Results
-##### _eagar=True
+##### _eager=True
 OOM thrown
 <img width="1429" height="1129" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
 
-##### _eagar=False
+##### _eager=False
 
 OOM thrown
 <img width="1433" height="1112" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
