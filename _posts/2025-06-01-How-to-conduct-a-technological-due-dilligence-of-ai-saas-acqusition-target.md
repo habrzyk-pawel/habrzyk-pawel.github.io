@@ -66,13 +66,44 @@ df = q_taxi.collect(_eager=True)
 ```
 #### Results
 ##### _eagar=True
-
+OOM thrown
+<img width="1429" height="1129" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
 
 ##### _eagar=False
 
+OOM thrown
+<img width="1433" height="1112" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
+
 
 ##### streaming=True
-OOM
+
+OOM thrown
+<img width="1436" height="1141" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
+
+### Script 3
+```python
+import polars as pl
+
+q_taxi = (pl.scan_csv("taxi.csv").sort("total_amount"))
+
+df = q_taxi.collect(streaming=True)
+df = q_taxi.collect(_eager=False)
+df = q_taxi.collect(_eager=True)
+```
+#### Results
+##### _eagar=True
+OOM thrown
+<img width="1429" height="1129" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
+
+##### _eagar=False
+
+OOM thrown
+<img width="1433" height="1112" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
+
+
+##### streaming=True
+
+OOM thrown
 <img width="1436" height="1141" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
 
 
