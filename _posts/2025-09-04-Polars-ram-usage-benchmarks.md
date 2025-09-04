@@ -146,7 +146,7 @@ df = con.execute(q).df()
 
 ```
 
-<img width="1437" height="1127" alt="image" src="https://github.com/user-attachments/assets/112fa1ba-60be-41c5-98bd-479e1f2c7da7" />
+<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/112fa1ba-60be-41c5-98bd-479e1f2c7da7" />
 
 
 ### Script 2 
