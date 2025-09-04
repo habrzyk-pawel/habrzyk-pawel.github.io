@@ -58,7 +58,12 @@ df = q_taxi.collect(_eager=True)
 ```python
 import polars as pl
 
-q_taxi = (pl.scan_csv("taxi.csv").sort("total_amount"))
+q_taxi = (
+    pl.scan_csv("taxi.csv")\
+  .with_columns((pl.col("total_amount")*100).cast(pl.Int64).alias("amt_cents"))\
+  .group_by(["payment_type","amt_cents"])\
+  .agg(pl.len())
+)
 
 df = q_taxi.collect(streaming=True)
 df = q_taxi.collect(_eager=False)
