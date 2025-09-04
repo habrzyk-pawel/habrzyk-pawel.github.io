@@ -43,6 +43,9 @@ df = q_taxi.collect(_eager=True)
 #### Results
 * note that in the future _eagar=True -> optimizations=True and streming=True -> engine="streaming"
 ##### _eager=True
+(OOM was thrown)
+
+
 <img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3a3803f9-966e-456f-aa00-268fda214142" />
 
 (seconds later container crushed due to OOM)
@@ -72,7 +75,8 @@ df = q_taxi.collect(_eager=True)
 ```
 #### Results
 ##### _eager=True
-OOM thrown
+(OOM was thrown)
+
 <img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/7b0b6c89-28a1-4ce5-b213-b3fda15a7b0e" />
 
 ##### _eager=False
@@ -96,18 +100,21 @@ df = q_taxi.collect(_eager=True)
 ```
 #### Results
 ##### _eager=True
-OOM thrown
+(OOM was thrown)
+
 <img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
 
 ##### _eager=False
 
-OOM thrown
+(OOM was thrown)
+
 <img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
 
 
 ##### streaming=True
 
-OOM thrown
+(OOM was thrown)
+
 <img style="max-width:80%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
 
 
