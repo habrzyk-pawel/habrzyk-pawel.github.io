@@ -15,6 +15,73 @@ This way, we delay the moment where we absolutelly need a cluster to make certai
 
 With that out of the way, lets try to figure out the impact it might have on consumption
 
+## Dataset 
+
+We will use faker to generate a simulation of taxi dataset.
+
+```python
+from faker import Faker
+import random
+import datetime
+
+fake = Faker()
+
+def generate_taxi_csv_row():
+    pickup = fake.date_time_between(start_date="-30d", end_date="now")
+    dropoff = pickup + datetime.timedelta(minutes=random.randint(5, 60))
+
+    passenger_count = random.randint(1, 4)
+    trip_distance = round(random.uniform(0.5, 15.0), 2)
+
+    fare = round(trip_distance * random.uniform(2.0, 4.0), 2)
+    extra = round(random.uniform(0, 5), 2)
+    mta_tax = 0.5
+    tip = round(fare * random.uniform(0.1, 0.3), 2)
+    tolls = round(random.uniform(0, 10), 2)
+    total = round(fare + extra + mta_tax + tip + tolls, 2)
+
+    fields = [
+        random.choice([1, 2]),  # vendor_id
+        pickup.isoformat(sep=" "),
+        dropoff.isoformat(sep=" "),
+        passenger_count,
+        trip_distance,
+        round(random.uniform(-74.05, -73.75), 6),  # pickup_longitude
+        round(random.uniform(40.63, 40.85), 6),   # pickup_latitude
+        round(random.uniform(-74.05, -73.75), 6), # dropoff_longitude
+        round(random.uniform(40.63, 40.85), 6),   # dropoff_latitude
+        random.randint(1, 6),                     # rate_code_id
+        random.choice(["Cash", "Credit", "No Charge", "Dispute"]),
+        fare,
+        extra,
+        mta_tax,
+        tip,
+        tolls,
+        total,
+    ]
+
+    return ",".join(map(str, fields))
+
+
+def write_csv_approx_Ngb(path, target_gb=10, batch_size=100000):
+    target_bytes = int(target_gb * (1024**3))
+    written = 0
+    with open(path, "w", buffering=1024*1024) as f:
+        while written < target_bytes:
+            rows = [generate_taxi_csv_row() for _ in range(batch_size)]
+            block = "\n".join(rows) + "\n"
+            f.write(block)
+            written += len(block)
+            if written // (100 * 1024 * 1024) != (written - len(block)) // (100 * 1024 * 1024):
+                print(f"{written / (1024**3):.2f} GB written...")
+    print(f"Done. Wrote ~{written / (1024**3):.2f} GB to {path}")
+
+  
+write_csv_approx_Ngb("taxi_15gb.csv", target_gb=8, batch_size=20000)
+
+```
+
+
 ## Polars
 We will run 3 agggreagations, each with `_eagar=True`, `_eagar=False`, `streaming=True`
 (streaming is a special case of `_eagar=False`)
