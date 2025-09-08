@@ -4,10 +4,17 @@ title:  "Polars ram usage benchmarks - Pt 2"
 date:   2025-09-08 09:00:00 +02:00
 ---
 
+
 Pt 2 of [Polars ram usage benchmarks](https://habrzyk-pawel.github.io/2025/09/04/Polars-ram-usage-benchmarks.html)
+
+## Intro
+Upgrading hardware takes time. Training an ml model is fast or slow due to processing time - the productivity per hour is the *soft limit*. Memory on the other hand is a hard limit - of we run out of it training does not happen. This article explores what can be done to delay the need for a distributed training cluster deployment. We will compare tools. We will also tune them to use as little memory as possible *even at a cost of cpu time* 
+
 
 ## Recap.
 In the previous article we found that polars is more efficient than pandas (expected) and duckDB is more efficient than polars (unexpected). Now, we will throw more benchmarks and better profiling tools to find out if that was just an outlier or an actual phenomenon.
+
+
 
 ## Dataset 
 
