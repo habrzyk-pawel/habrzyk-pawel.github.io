@@ -1,7 +1,7 @@
 ---
 layout: default
-title:  "Polars ram usage benchmarks"
-date:   2025-09-04 09:00:00 +02:00
+title:  "Polars ram usage benchmarks - Pt 2"
+date:   2025-09-08 09:00:00 +02:00
 ---
 
 This entry is meant as an mini extension of [this beautiful blog post](https://medium.com/dev-jam/wrestling-the-bear-benchmarking-execution-modes-of-polars-8b2626efd643)
