@@ -7,7 +7,7 @@ date:   2025-09-08 09:00:00 +02:00
 
 Pt 2 of [Polars ram usage benchmarks](https://habrzyk-pawel.github.io/2025/09/04/Polars-ram-usage-benchmarks.html)
 
-## Intro
+## Intro.
 Upgrading hardware takes time. Training an ml model is fast or slow due to processing time - the productivity per hour is the *soft limit*. Memory on the other hand is a hard limit - of we run out of it training does not happen. This article explores what can be done to delay the need for a distributed training cluster deployment. We will compare tools. We will also tune them to use as little memory as possible *even at a cost of cpu time* 
 
 
@@ -16,7 +16,7 @@ In the previous article we found that polars is more efficient than pandas (expe
 
 
 
-## Dataset 
+## Dataset.
 
 We will use faker to generate a simulated taxi dataset. This time we will use a 550mb file instead of 7.5gb
 
@@ -83,177 +83,6 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
 ```
 
 
-## Tests
-We will run 3 agggreagations, each with `_eagar=True`, `_eagar=False`, `streaming=True` and in DuckDB
-(streaming is a special case of `_eagar=False`)
-
-### Script 1
-```python
-import polars as pl
-
-q_taxi = (
-    pl.scan_csv("taxi.csv")
-    .filter(
-        (pl.col("passenger_count") >= 1) & (pl.col("trip_distance") > 0.5)
-    )
-    .group_by("payment_type")
-    .agg(
-        trips=pl.len(),
-        mean_fare=pl.col("total_amount").mean(),
-        mean_dist=pl.col("trip_distance").mean(),
-    )
-)
-
-df = q_taxi.collect(streaming=True)
-df = q_taxi.collect(_eager=False)
-df = q_taxi.collect(_eager=True)
-```
-#### Results
-* note that in the future _eagar=True -> optimizations=True and streming=True -> engine="streaming"
-##### _eager=True
-(OOM was thrown)
-
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3a3803f9-966e-456f-aa00-268fda214142" />
-
-##### _eager=False
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/46a52520-9206-47f3-bff3-5cd590ab6e11" />
-
-##### streaming=True
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/b00eacda-3d68-4baf-8257-c7979514fd6d" />
-
-##### DuckDB
-```python
-import duckdb
-
-con = duckdb.connect()
-
-q = """
-SELECT
-  payment_type,
-  COUNT(*) AS trips,
-  AVG(total_amount) AS mean_fare,
-  AVG(trip_distance) AS mean_dist
-FROM 'taxi.csv'
-WHERE passenger_count >= 1
-  AND trip_distance > 0.5
-GROUP BY payment_type
-"""
-
-print("streaming")
-df = con.execute(q).df()
-
-```
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/112fa1ba-60be-41c5-98bd-479e1f2c7da7" />
-
-
-### Script 2 
-(script 1 with exploded group count)
-```python
-import polars as pl
-
-q_taxi = (
-    pl.scan_csv("taxi.csv")\
-  .with_columns((pl.col("total_amount")*100).cast(pl.Int64).alias("amt_cents"))\
-  .group_by(["payment_type","amt_cents"])\
-  .agg(pl.len())
-)
-
-df = q_taxi.collect(streaming=True)
-df = q_taxi.collect(_eager=False)
-df = q_taxi.collect(_eager=True)
-```
-#### Results
-##### _eager=True
-(OOM was thrown)
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/7b0b6c89-28a1-4ce5-b213-b3fda15a7b0e" />
-
-##### _eager=False
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/522ff92f-8b31-470f-bae9-26ff79cdd78e" />
-
-
-##### streaming=True
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/e527f341-0025-453b-b74f-bf00798cdd78" />
-
-##### DuckDB
-
-```python
-import duckdb
-
-con = duckdb.connect()
-
-q = """
-SELECT
-  payment_type,
-  CAST(total_amount * 100 AS BIGINT) AS amt_cents,
-  COUNT(*) AS len
-FROM 'taxi.csv'
-GROUP BY payment_type, amt_cents
-"""
-
-print("streaming")
-df = con.execute(q).df()
-```
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/17486eb2-2390-4145-a721-774a438bb4e3" />
-
-
-### Script 3
-```python
-import polars as pl
-
-q_taxi = (pl.scan_csv("taxi.csv").sort("total_amount"))
-
-df = q_taxi.collect(streaming=True)
-df = q_taxi.collect(_eager=False)
-df = q_taxi.collect(_eager=True)
-```
-#### Results
-##### _eager=True
-(OOM was thrown)
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/3b752baf-2966-474f-a4bc-6ff1016e6150" />
-
-##### _eager=False
-
-(OOM was thrown)
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/6055d2e3-f63e-4824-8c5e-1533bc430dd0" />
-
-
-##### streaming=True
-
-(OOM was thrown)
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
-
-#### DuckDB
-NO OOM !!!
-
-```python
-import duckdb
-
-con = duckdb.connect()
-
-q = """
-SELECT *
-FROM 'taxi.csv'
-ORDER BY total_amount
-"""
-
-df = con.execute(q).df()
-```
-
-<img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/92046dcd-63ab-4b81-b2db-426e86fa108c" />
-
-
-## Conclusion 
-The difference can be stark - script 1&2 demonstrate that certain aggregations can be practically done without ram usage. On the other hand, script 3 shows that this is not a silver bullet. Interestingly, DuckDB survived workload 3, and I don't know what to do with it yet.
-
-Next, we will investigate reason for worse performance of polars in this particular benchmark. We will optimze both polars and duckdb for working memory performance. After that, we will evaluate XGBoost out-of-core features to see how far we can push it on limited hardware. 
-
+## Benchmark.
 
 
