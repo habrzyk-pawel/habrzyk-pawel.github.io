@@ -89,8 +89,8 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
 ## Benchmark
 <details>
     <summary>Python code</summary>
-    ```python
-    # --- Pandas ---
+```python
+# --- Pandas ---
 FILE = "taxi_550mb.csv"
 COLUMNS = [
     "vendor_id",
@@ -324,9 +324,7 @@ def panda():
 
     out = df.groupby(group_cols, group_keys=False).apply(add_roll)
     return out
-
-
-
+    
 def polar():
     import polars as pl
     group_cols = ["vendor_id", "passenger_count", "payment_type"]
@@ -348,9 +346,7 @@ def polar():
           .collect(engine="streaming")  # <-- use engine=, not streaming=True
     )
     return out
-
-
-
+    
 def duck():
     import duckdb
     group_cols = ["vendor_id", "passenger_count", "payment_type"]
@@ -391,10 +387,7 @@ def duck():
     out = con.sql(sql).df()
     con.close()
     return out
-
-
-
-
+    
 panda()
 polar()
 duck()
