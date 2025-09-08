@@ -90,7 +90,6 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
 <details>
     <summary>Python code</summary>
 ```python
-# --- Pandas ---
 FILE = "taxi_550mb.csv"
 COLUMNS = [
     "vendor_id",
@@ -106,8 +105,8 @@ COLUMNS = [
     "mta_tax",
     "tip_amount",
 ]
- # Downcast numeric dtypes to reduce memory in pandas
-PANDAS_DTYPE_MAP = {
+
+    PANDAS_DTYPE_MAP = {
     "vendor_id": "Int8",
     "passenger_count": "Int8",
     "rate_code_id": "Int8",
@@ -119,7 +118,6 @@ PANDAS_DTYPE_MAP = {
     "tip_amount": "float32",
 }
 
-# Matching dtypes for Polars to avoid wide defaults
 try:
     import polars as _pl
     POLARS_DTYPES = {
