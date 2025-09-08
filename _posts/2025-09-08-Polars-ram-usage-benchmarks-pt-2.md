@@ -4,22 +4,14 @@ title:  "Polars ram usage benchmarks - Pt 2"
 date:   2025-09-08 09:00:00 +02:00
 ---
 
-This entry is meant as an mini extension of [this beautiful blog post](https://medium.com/dev-jam/wrestling-the-bear-benchmarking-execution-modes-of-polars-8b2626efd643)
+Pt 2 of [Polars ram usage benchmarks](https://habrzyk-pawel.github.io/2025/09/04/Polars-ram-usage-benchmarks.html)
 
-What we will do is we will try to gauge the differences between eagar, lazy and streaming in terms of ram usage.
-I curently face multiple issues related to OOM, anything that mentions out of core computation is of interest to me.
-We will pit polars against DuckDB for comparison.
-
-## Out of core
-This mode of computation allows the engine to offload cached data for future joins onto a dedicated file. Instead of keeping everything in memory, data that is not immediately needed is stored on disk for later use. This approach helps defer the point at which a cluster becomes necessary for performing certain aggregations.
-
-If you encounter an out-of-memory (OOM) issue, a good initial step is to review the documentation of the tool you are using to enable out-of-core execution (noting that many frameworks disable this feature by default in favor of speed).
-
-With that context established, we can now examine the potential impact this approach may have on resource consumption.
+## Recap.
+In the previous article we found that polars is more efficient than pandas (expected) and duckDB is more efficient than polars (unexpected). Now, we will throw more benchmarks and better profiling tools to find out if that was just an outlier or an actual phenomenon.
 
 ## Dataset 
 
-We will use faker to generate a simulated taxi dataset.
+We will use faker to generate a simulated taxi dataset. This time we will use a 550mb file instead of 7.5gb
 
 ```python
 from faker import Faker
@@ -79,7 +71,7 @@ def write_csv_approx_Ngb(path, target_gb=10, batch_size=100000):
     print(f"Done. Wrote ~{written / (1024**3):.2f} GB to {path}")
 
   
-write_csv_approx_Ngb("taxi_15gb.csv", target_gb=8, batch_size=20000)
+write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
 
 ```
 
