@@ -87,6 +87,26 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
 </details>
 
 ## Benchmark
+### Optimizations
+- Pandas:
+  - usecols: read only needed columns to reduce in-memory width.
+  - dtype downcast: map ints to Int8 and floats to float32 where applicable.
+  - memory_map: enable `memory_map=True` in `read_csv` to lower peak RSS.
+  - parse_dates selectively for time-based ops to avoid unnecessary object dtype.
+
+- Polars:
+  - Lazy ingestion: switch to `scan_csv` with early `.select(...)` projection.
+  - Streaming execution: use `.collect(engine="streaming")` to avoid full materialization.
+  - Explicit dtypes: provide narrower numeric dtypes for selected columns.
+
+- DuckDB:
+  - Lower parallelism: `SET threads=1` to reduce concurrent buffers.
+  - Cap memory: `SET memory_limit='512MB'` so operators spill instead of growing RAM.
+  - Disk spill: `SET temp_directory='duckspill'` for on-disk spilling.
+  - CSV reader: `read_csv_auto(..., parallel=false)` to decrease input buffering.
+
+### Code
+
 ```python
 # --- Pandas ---
 FILE = "taxi_550mb.csv"
@@ -392,20 +412,4 @@ duck()
 
 ```
 
-### Optimizations
-- Pandas:
-  - usecols: read only needed columns to reduce in-memory width.
-  - dtype downcast: map ints to Int8 and floats to float32 where applicable.
-  - memory_map: enable `memory_map=True` in `read_csv` to lower peak RSS.
-  - parse_dates selectively for time-based ops to avoid unnecessary object dtype.
 
-- Polars:
-  - Lazy ingestion: switch to `scan_csv` with early `.select(...)` projection.
-  - Streaming execution: use `.collect(engine="streaming")` to avoid full materialization.
-  - Explicit dtypes: provide narrower numeric dtypes for selected columns.
-
-- DuckDB:
-  - Lower parallelism: `SET threads=1` to reduce concurrent buffers.
-  - Cap memory: `SET memory_limit='512MB'` so operators spill instead of growing RAM.
-  - Disk spill: `SET temp_directory='duckspill'` for on-disk spilling.
-  - CSV reader: `read_csv_auto(..., parallel=false)` to decrease input buffering.
