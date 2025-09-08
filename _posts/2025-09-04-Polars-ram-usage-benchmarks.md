@@ -232,7 +232,6 @@ df = q_taxi.collect(_eager=True)
 <img style="max-width:100%; height:auto;" alt="image" src="https://github.com/user-attachments/assets/057ec80f-929f-47fb-85a2-eab35d32e7f8" />
 
 #### DuckDB
-NO OOM !!!
 
 ```python
 import duckdb
@@ -252,7 +251,7 @@ df = con.execute(q).df()
 
 
 ## Conclusion 
-The difference can be stark - script 1&2 demonstrate that certain aggregations can be practically done without ram usage. On the other hand, script 3 shows that this is not a silver bullet. Interestingly, DuckDB survived workload 3, and I don't know what to do with it yet.
+The difference can be stark - script 1&2 demonstrate that certain aggregations can be practically done without ram usage. On the other hand, script 3 shows that this is not a silver bullet. Interestingly, DuckDB survived workload 3. We will investigate this further in [Pt 2](https://habrzyk-pawel.github.io/2025/09/08/Polars-ram-usage-benchmarks-pt-2.html)
 
 Next, we will investigate reason for worse performance of polars in this particular benchmark. We will optimze both polars and duckdb for working memory performance. After that, we will evaluate XGBoost out-of-core features to see how far we can push it on limited hardware. 
 
