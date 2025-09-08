@@ -1,6 +1,6 @@
-title: "My Blog"
+title: "My Blog."
 author: "Paweł Habrzyk"
-description: "My blog. Enjoy"
+description: "My blog. Enjoy."
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://pawel-habrzyk.github.io"
 
