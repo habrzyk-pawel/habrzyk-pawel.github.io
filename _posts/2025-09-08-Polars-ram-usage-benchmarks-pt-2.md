@@ -116,7 +116,7 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
 
 ### Results
 
-<img  alt="output" src="https://github.com/user-attachments/assets/0a68ba20-2afb-472f-b71a-1416ff0fea53" />
+<img  style="max-width:100%; height:auto;"alt="output" src="https://github.com/user-attachments/assets/0a68ba20-2afb-472f-b71a-1416ff0fea53" />
 
 
 
