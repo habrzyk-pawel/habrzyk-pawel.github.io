@@ -89,6 +89,349 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
 <details>
 <summary>Code</summary>
 {% highlight python %}
+# --- Pandas ---
+FILE = "taxi_550mb.csv"
+COLUMNS = [
+    "vendor_id",
+    "pickup_datetime",
+    "dropoff_datetime",
+    "passenger_count",
+    "trip_distance",
+    "pickup_longitude",
+    "dropoff_longitude",
+    "rate_code_id",
+    "payment_type",
+    "extra",
+    "mta_tax",
+    "tip_amount",
+]
+ # Downcast numeric dtypes to reduce memory in pandas
+PANDAS_DTYPE_MAP = {
+    "vendor_id": "Int8",
+    "passenger_count": "Int8",
+    "rate_code_id": "Int8",
+    "trip_distance": "float32",
+    "pickup_longitude": "float32",
+    "dropoff_longitude": "float32",
+    "extra": "float32",
+    "mta_tax": "float32",
+    "tip_amount": "float32",
+}
+
+# Matching dtypes for Polars to avoid wide defaults
+try:
+    import polars as _pl
+    POLARS_DTYPES = {
+        "vendor_id": _pl.Int8,
+        "passenger_count": _pl.Int8,
+        "rate_code_id": _pl.Int8,
+        "trip_distance": _pl.Float32,
+        "pickup_longitude": _pl.Float32,
+        "dropoff_longitude": _pl.Float32,
+        "extra": _pl.Float32,
+        "mta_tax": _pl.Float32,
+        "tip_amount": _pl.Float32,
+    }
+except Exception:
+    POLARS_DTYPES = None
+def pandas_read_full_1():
+    import pandas as pd
+    pd.read_csv(FILE, usecols=COLUMNS, dtype=PANDAS_DTYPE_MAP, memory_map=True)
+
+def polars_read_full_1():
+    import polars as pl
+    (
+        pl.scan_csv(FILE, schema_overrides=POLARS_DTYPES)
+        .select(COLUMNS)
+        .collect()
+    )
+
+def duckdb_read_full_1():
+    import duckdb
+    # Return relation; avoid converting to a DataFrame here
+    return duckdb.sql(f"SELECT * FROM {FILE!r}")
+
+pandas_read_full_1()
+polars_read_full_1()
+duckdb_read_full_1()
+print(1)
+
+def pandas_read_cols_1():
+    import pandas as pd
+    # usecols streams only these columns from disk (memory-friendly)
+    return pd.read_csv(FILE, usecols=COLUMNS, dtype=PANDAS_DTYPE_MAP, memory_map=True)
+print(1.1)
+
+def polars_read_cols_1():
+    import polars as pl
+    # Read just these columns; for even larger files, consider pl.scan_csv(...).select(...).collect()
+    return (
+        pl.scan_csv(FILE, schema_overrides=POLARS_DTYPES)
+        .select(COLUMNS)
+        .collect()
+    )
+print(1.2)
+
+def duckdb_read_cols_1():
+    import duckdb
+    # Read & project only needed columns via SQL; convert to pandas DF (or drop .pl() to keep a DuckDB Relation)
+    select_list = ", ".join(COLUMNS)
+    # Pass file path as a parameter using the supported keyword arg
+    return duckdb.sql(f"SELECT {select_list} FROM {FILE!r}")
+
+pandas_read_cols_1()
+polars_read_cols_1()
+duckdb_read_cols_1()
+print(2)
+
+def pandas_read_cols_2():
+    import pandas as pd
+    # usecols streams only these columns from disk (memory-friendly)
+    return pd.read_csv(FILE, usecols=COLUMNS, dtype=PANDAS_DTYPE_MAP, memory_map=True)
+print(2.1)
+def polars_read_cols_2():
+    import polars as pl
+    # Read just these columns; for even larger files, consider pl.scan_csv(...).select(...).collect()
+    return (
+        pl.scan_csv(FILE, schema_overrides=POLARS_DTYPES)
+        .select(COLUMNS)
+        .collect()
+    )
+print(2.2)
+def duckdb_read_cols_2():
+    import duckdb
+    # Read & project only needed columns via SQL; convert to pandas DF (or drop .pl() to keep a DuckDB Relation)
+    select_list = ", ".join(COLUMNS)
+    # Pass file path as a parameter using the supported keyword arg
+    # Keep relation; defer materialization
+    return duckdb.sql(f"SELECT {select_list} FROM {FILE!r}")
+
+pandas_read_cols_2()
+polars_read_cols_2()
+duckdb_read_cols_2()
+print(3)
+
+def pandas_diff_counts():
+    import pandas as pd
+    df = pd.read_csv(
+        FILE,
+        usecols=["pickup_datetime", "trip_distance"],
+        dtype={"trip_distance": "float32"},
+        memory_map=True,
+        parse_dates=["pickup_datetime"],
+    )
+    df = df.sort_values("pickup_datetime")
+    df["trip_distance_change"] = df["trip_distance"].diff()
+    change_counts = (
+        df.groupby("trip_distance_change").size()
+        .sort_values(ascending=False)
+        .to_frame("count")
+        .reset_index()
+    )
+print(3.1)
+
+def polars_diff_counts():
+    import polars as pl
+    (
+        pl.scan_csv(FILE, schema_overrides=POLARS_DTYPES)
+          .select(["pickup_datetime", "trip_distance"]) 
+          .with_columns(pl.col("pickup_datetime").cast(pl.Datetime, strict=False))
+          .drop_nulls(["pickup_datetime"]) 
+          .sort("pickup_datetime")
+          .with_columns(pl.col("trip_distance").diff().alias("trip_distance_change"))
+          .drop_nulls(["trip_distance_change"]) 
+          .group_by("trip_distance_change").agg(pl.len().alias("count"))
+          .sort("count", descending=True)
+          .collect()
+    )
+print(3.2)
+
+def duckdb_diff_counts():
+    import duckdb
+    con = duckdb.connect()
+    # Reduce memory usage: limit threads, cap memory, and enable disk spill directory
+    con.execute("SET threads=1")
+    con.execute("SET memory_limit='512MB'")
+    con.execute("SET temp_directory='duckspill'")
+    change_counts = con.sql(f"""
+    WITH changes AS (
+    SELECT
+        trip_distance,
+        trip_distance - LAG(trip_distance) OVER (ORDER BY pickup_datetime) AS trip_distance_change
+    FROM {FILE!r}
+    )
+    SELECT trip_distance_change, COUNT(*) AS count
+    FROM changes
+    WHERE trip_distance_change IS NOT NULL
+    GROUP BY trip_distance_change
+    ORDER BY count DESC
+    """)
+
+pandas_diff_counts()
+polars_diff_counts()
+duckdb_diff_counts()
+print(4)
+
+def pandas_min_diff():
+    import pandas as pd
+    s = (
+        pd.read_csv(
+            FILE,
+            usecols=["pickup_datetime", "trip_distance"],
+            dtype={"trip_distance": "float32"},
+            memory_map=True,
+            parse_dates=["pickup_datetime"],
+        )
+          .sort_values("pickup_datetime")["trip_distance"]
+          .diff()
+    )
+    return s.min()  # skips NaN by default
+print(4.1)
+
+def polars_min_diff():
+    import polars as pl
+    res = (
+        pl.scan_csv(FILE, schema_overrides=POLARS_DTYPES)
+          .select(["pickup_datetime", "trip_distance"]) 
+          .with_columns(pl.col("pickup_datetime").cast(pl.Datetime, strict=False))
+          .drop_nulls(["pickup_datetime"]) 
+          .sort("pickup_datetime")
+          .with_columns(pl.col("trip_distance").diff().alias("trip_distance_change"))
+          .select(pl.col("trip_distance_change").min().alias("min_value"))
+          .collect()
+    )
+    return res["min_value"][0]
+print(4.2)
+
+def duckdb_min_diff():
+    import duckdb
+    con = duckdb.connect()
+    # Reduce memory usage
+    min_val = con.sql(f"""
+        WITH changes AS (
+          SELECT
+            trip_distance - LAG(trip_distance) OVER (ORDER BY pickup_datetime) AS trip_distance_change
+          FROM {FILE!r}
+        )
+        SELECT MIN(trip_distance_change) AS min_value
+        FROM changes
+    """).fetchone()[0]
+    con.close()
+    return min_val
+
+pandas_min_diff()
+polars_min_diff()
+duckdb_min_diff()
+print(5)
+
+def pandas_rolling_3d():
+    import pandas as pd
+    group_cols = ["vendor_id", "passenger_count", "payment_type"]
+
+    df = pd.read_csv(
+        FILE,
+        usecols=group_cols + ["pickup_datetime", "trip_distance"],
+        dtype=PANDAS_DTYPE_MAP,
+        parse_dates=["pickup_datetime"],
+        memory_map=True,
+    )
+    df = df.sort_values(group_cols + ["pickup_datetime"])
+
+    def add_roll(g: pd.DataFrame) -> pd.DataFrame:
+        s = g.set_index("pickup_datetime")["trip_distance"]
+        # Ensure a proper DatetimeIndex for time-based rolling
+        s.index = pd.DatetimeIndex(s.index)
+        # Ensure monotonic index for time-based rolling
+        s = s.sort_index()
+        win = s.rolling("3D", min_periods=1)  # time-based, per group
+        return g.assign(
+            roll_sum_3d=win.sum().to_numpy(),
+            roll_mean_3d=win.mean().to_numpy(),
+            roll_count_3d=win.count().to_numpy(),
+        )
+
+    out = df.groupby(group_cols, group_keys=False).apply(add_roll)
+    return out
+print(5.1)
+
+def polars_rolling_3d():
+    import polars as pl
+    group_cols = ["vendor_id", "passenger_count", "payment_type"]
+
+    lf = (
+        pl.scan_csv(FILE, schema_overrides=POLARS_DTYPES)
+          .select(group_cols + ["pickup_datetime", "trip_distance"])  # prune early
+          .with_columns(pl.col("pickup_datetime").cast(pl.Datetime, strict=False))
+          .sort(group_cols + ["pickup_datetime"])  # ensure sorted within groups
+          .drop_nulls(subset=["pickup_datetime"] + group_cols)  # dynamic group_by requires non-null keys/index
+    )
+
+    # Use dynamic grouping to emulate a 3-day trailing window per group.
+    # Start windows at each datapoint and close on the right to include the current row.
+    out = (
+        lf.group_by_dynamic(
+              index_column="pickup_datetime",
+              every="1d",
+              period="3d",
+              group_by=group_cols,
+              start_by="datapoint",
+              closed="right",
+          )
+          .agg([
+              pl.col("trip_distance").sum().alias("roll_sum_3d"),
+              pl.col("trip_distance").mean().alias("roll_mean_3d"),
+              pl.len().alias("roll_count_3d"),
+          ])
+          .collect()
+    )
+    return out
+print(5.2)
+
+def duckdb_rolling_3d():
+    import duckdb
+    group_cols = ["vendor_id", "passenger_count", "payment_type"]
+    keys = ", ".join(group_cols)
+
+    sql = f"""
+    WITH src AS (
+      SELECT *,
+             CAST(pickup_datetime AS TIMESTAMP) AS ts
+      FROM {FILE!r}
+    )
+    SELECT
+      {keys},
+      ts AS pickup_datetime,
+      SUM(trip_distance) OVER (
+        PARTITION BY {keys}
+        ORDER BY ts
+        RANGE BETWEEN INTERVAL '3' DAY PRECEDING AND CURRENT ROW
+      ) AS roll_sum_3d,
+      AVG(trip_distance) OVER (
+        PARTITION BY {keys}
+        ORDER BY ts
+        RANGE BETWEEN INTERVAL '3' DAY PRECEDING AND CURRENT ROW
+      ) AS roll_mean_3d,
+      COUNT(*) OVER (
+        PARTITION BY {keys}
+        ORDER BY ts
+        RANGE BETWEEN INTERVAL '3' DAY PRECEDING AND CURRENT ROW
+      ) AS roll_count_3d
+    FROM src
+    ORDER BY {keys}, ts
+    """
+    con = duckdb.connect()
+    # Reduce memory usage
+    con.execute("SET threads=1")
+    con.execute("SET memory_limit='512MB'")
+    con.execute("SET temp_directory='duckspill'")
+    out = con.sql(sql).pl()
+    con.close()
+    return out
+
+pandas_rolling_3d()
+polars_rolling_3d()
+duckdb_rolling_3d()
+print(6)
 
 {% endhighlight %}
 </details>
