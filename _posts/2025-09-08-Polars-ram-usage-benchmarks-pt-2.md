@@ -99,7 +99,7 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
   - Streaming execution: use `.collect(engine="streaming")` to avoid full materialization.
   - Explicit dtypes: provide narrower numeric dtypes for selected columns.
 
-- DuckDB:
+- [DuckDB](https://duckdb.org/docs/stable/configuration/overview.html):
   - Lower parallelism: `SET threads=1` to reduce concurrent buffers.
   - Cap memory: `SET memory_limit='512MB'` so operators spill instead of growing RAM.
   - Disk spill: `SET temp_directory='duckspill'` for on-disk spilling.
