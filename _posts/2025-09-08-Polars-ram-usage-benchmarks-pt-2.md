@@ -114,6 +114,11 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
   - Cap memory: `SET memory_limit='512MB'` so operators spill instead of growing RAM.
   Both cpu and disk throughput were exhausted while ram utilization was low. If need be, try to tweak them to Your needs.
 
+### Results
+
+<img  alt="output" src="https://github.com/user-attachments/assets/0a68ba20-2afb-472f-b71a-1416ff0fea53" />
+
+
 
 
 
