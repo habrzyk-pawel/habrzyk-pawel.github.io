@@ -23,7 +23,7 @@ We will use faker to generate a simulated taxi dataset. This time we will use a 
 <details>
     <summary>Dataset generation code</summary>
 
-{% highlight ruby %}
+{% highlight python %}
 from faker import Faker
 import random
 import datetime
@@ -107,9 +107,9 @@ write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
   - Cap memory: `SET memory_limit='512MB'` so operators spill instead of growing RAM.
   Both cpu and disk throughput were exhausted while ram utilization was low. If need be, try to tweak them to Your needs.
 
-### Code
-
-```python
+<details>
+<summary>Code</summary>
+{% highlight python %}
 # --- Pandas ---
 FILE = "taxi_550mb.csv"
 COLUMNS = [
@@ -412,6 +412,8 @@ panda()
 polar()
 duck()
 
-```
+{% endhighlight %}
+
+</details>
 
 
