@@ -23,7 +23,7 @@ We will use faker to generate a simulated taxi dataset. This time we will use a 
 <details>
     <summary>Dataset generation code</summary>
 
-```python
+{% highlight ruby %}
 from faker import Faker
 import random
 import datetime
@@ -82,8 +82,7 @@ def write_csv_approx_Ngb(path, target_gb=10, batch_size=100000):
 
   
 write_csv_approx_Ngb("taxi_550mb.csv", target_gb=0.55, batch_size=20000)
-
-```
+{% endhighlight %}
 </details>
 
 ## Benchmark
