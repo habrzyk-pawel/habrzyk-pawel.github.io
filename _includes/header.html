@@ -1,5 +1,19 @@
-<header>
-  <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
-  <p>{{ site.description }}</p>
-  <hr>
-</header>
+<nav class="top-nav" aria-label="Main navigation">
+  <div class="top-nav-grid">
+    <div class="top-nav-cell brand">
+      <a class="brand-link" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+    </div>
+    <div class="top-nav-cell">
+      <a href="{{ '/' | relative_url }}">Posts</a>
+    </div>
+    <div class="top-nav-cell">
+      <a href="https://github.com/{{ site.github | default: 'habrzyk-pawel' }}" target="_blank">GitHub</a>
+    </div>
+    <div class="top-nav-cell">
+      <a href="https://github.com/habrzyk-pawel" target="_blank">About</a>
+    </div>
+    <div class="top-nav-cell">
+      <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+    </div>
+  </div>
+</nav>

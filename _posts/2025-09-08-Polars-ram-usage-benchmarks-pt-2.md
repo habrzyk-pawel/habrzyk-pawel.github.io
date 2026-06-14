@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title:  "Polars ram usage benchmarks - Pt 2"
 date:   2025-09-08 09:00:00 +02:00
 ---

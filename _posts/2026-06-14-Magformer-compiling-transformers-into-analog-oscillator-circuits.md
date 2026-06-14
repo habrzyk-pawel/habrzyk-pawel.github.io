@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: "Magformer — compiling Transformers into analog oscillator circuits"
 date: 2026-06-14 15:55:00 +02:00
 ---

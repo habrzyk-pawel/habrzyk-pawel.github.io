@@ -2,9 +2,7 @@ title: "My Blog."
 author: "Paweł Habrzyk"
 description: "My blog. Enjoy."
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://pawel-habrzyk.github.io"
-
-theme: minima
+url: "https://habrzyk-pawel.github.io"
 
 # Build settings
 enforce_https: true
