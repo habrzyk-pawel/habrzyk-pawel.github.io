@@ -6,3 +6,4 @@ url: "https://habrzyk-pawel.github.io"
 
 # Build settings
 enforce_https: true
+theme: null
