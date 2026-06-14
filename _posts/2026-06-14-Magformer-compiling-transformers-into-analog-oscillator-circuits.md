@@ -23,7 +23,9 @@ The idea is not new — oscillator-based neural computation has been explored in
 
 A standard self-attention block computes:
 
-<p>$$\\text{Attention}(Q,K,V) = \\text{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V$$</p>
+{% raw %}
+<p>$$\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$</p>
+{% endraw %}
 
 That means loading three big matrices from DRAM, doing O(n²d) multiplies, and writing the result back. On a small battery-powered sensor this is punishing.
 
