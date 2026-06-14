@@ -6,7 +6,7 @@ title: Home
 <div class="page">
   <section class="hero">
     <p class="overline">Personal Blog · Machine Learning · Engineering</p>
-    <h1>THE AGENT THAT<br>GROWS WITH YOU.</h1>
+    <h1>Tiny blog for the sake of learning</h1>
     <p>Notes on machine learning, data systems, and the occasional analog curiosity. I write about things I build and things I learn.</p>
   </section>
 
